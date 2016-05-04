@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="wxdownload.ImageIsCheck"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="250">
+    <Grid Name="grid_photo"  AllowDrop="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="33*"/>
+        </Grid.RowDefinitions>
+        <Border CornerRadius="10" Background="White" Grid.Row="1">
+        <Image x:Name="img_Phote" Grid.Row="1" RenderTransformOrigin="0.5,0.5" PreviewMouseDown="img_Phote_PreviewMouseDown">
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                   
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
+        </Image>
+        </Border>
+        <Border CornerRadius="10" Grid.Row="0">
+        <Label x:Name="lab_timedata" Content="日期" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>

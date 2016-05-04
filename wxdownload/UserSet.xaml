@@ -1,0 +1,29 @@
+﻿<Window x:Class="wxdownload.UserSet"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="UserSet" Height="300" Width="446" Loaded="Window_Loaded_1" WindowStartupLocation="CenterScreen" Background="#FF16021F" AllowsTransparency="True" WindowStyle="None">
+    <Grid Margin="0" RenderTransformOrigin="0.635,0.477">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22*"/>
+            <RowDefinition Height="191*"/>
+            <RowDefinition Height="87*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="71*"/>
+            <ColumnDefinition Width="152*"/>
+        </Grid.ColumnDefinitions>
+        <Label Content="打印机：" HorizontalAlignment="Left" Height="39" Margin="40,9,0,0" VerticalAlignment="Top" Width="116" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2" Foreground="White"/>
+        <ComboBox x:Name="comb_print" HorizontalAlignment="Left" Height="30" Margin="34,5,0,0" VerticalAlignment="Top" Width="214" SelectionChanged="comb_print_SelectionChanged" Grid.Row="1" Grid.Column="1" FontSize="15"  />
+        <Label Content="纸张尺寸：" HorizontalAlignment="Left" Height="39" Margin="33,46,0,0" VerticalAlignment="Top" Width="116" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Grid.Row="1" Foreground="White" Grid.ColumnSpan="2"/>
+        <ComboBox x:Name="comb_size" HorizontalAlignment="Left" Margin="34,55,0,0" Width="214" Height="30" VerticalAlignment="Top" Grid.Row="1" Grid.Column="1" FontSize="15"/>
+        <Button Content="退出" HorizontalAlignment="Left" Height="40" Margin="221,19,0,0" VerticalAlignment="Top" Width="60" Click="Button_Click_1" Grid.Column="1" Grid.Row="2"/>
+        <Label Content="辅助工具：" HorizontalAlignment="Left" Height="39" Margin="33,98,0,0" VerticalAlignment="Top" Width="116" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="18" Grid.Row="1" Foreground="White" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="text_ExePath" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="34,106,0,0" Grid.Row="1" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="211"/>
+        <Button x:Name="but_PhotoExe" Content="..." Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="256,107,0,0" Grid.Row="1" VerticalAlignment="Top" Width="29" Click="but_PhotoExe_Click"/>
+        <Button Content="照片目录" Grid.Column="1" HorizontalAlignment="Left" Height="40" Margin="141,19,0,0" Grid.Row="2" VerticalAlignment="Top" Width="60" Click="Button_Click_2"/>
+        <Button Content="清空缓存" Grid.Column="1" HorizontalAlignment="Left" Height="40" Margin="61,19,0,0" Grid.Row="2" VerticalAlignment="Top" Width="60" Click="Button_Click_3"/>
+        <Label Content="" Name="LabelState" HorizontalAlignment="Center" Height="46" Margin="10,140,10,5" Grid.Row="1" VerticalAlignment="Center" Width="426" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="#FFEE0000" FontSize="25" RenderTransformOrigin="0.045,0.522" Grid.ColumnSpan="2"/>
+        <Button Grid.ColumnSpan="2" Content="帮助" HorizontalAlignment="Left" Height="40" Margin="116,19,0,0" Grid.Row="2" VerticalAlignment="Top" Width="64" Click="Button_Click_4"/>
+
+    </Grid>
+</Window>

@@ -1,0 +1,542 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:microsoftWindowsThemes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+        xmlns:local="clr-namespace:wxdownload" x:Class="wxdownload.MainWindow"
+        Title="MainWindow" Height="768" Width="1360" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded_1" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}"
+        Icon="mark.ico"
+        >
+    <Window.Resources>
+        <DataTemplate x:Key="ListBoxTemplate">
+            <Grid  Margin="10" HorizontalAlignment="Left" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+                <Border   Width="50" Height="50" HorizontalAlignment="Left" CornerRadius="60" >
+                    <Border.Background>
+                        <ImageBrush>
+                            <ImageBrush.ImageSource>
+                                <Binding Path="HeadImgUrl" />
+                            </ImageBrush.ImageSource>
+                        </ImageBrush>
+                    </Border.Background>
+                </Border>
+                <TextBlock Text="{Binding NickName}" Width="auto" Height="auto" HorizontalAlignment="Center"  VerticalAlignment="Center" FontSize="20" Grid.Column="1" Foreground="White"/>
+            </Grid>
+        </DataTemplate>
+
+        <ControlTemplate x:Key="ScrollViewerControlTemplate1" TargetType="{x:Type ScrollViewer}">
+            <Grid  Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="Corner" Grid.Column="1" Fill="Black" Grid.Row="1"/>
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Style="{DynamicResource ScrollBarStyle1}"/>
+            </Grid>
+        </ControlTemplate>
+        <LinearGradientBrush x:Key="VerticalScrollBarBackground" EndPoint="1,0" StartPoint="0,0">
+            <GradientStop Color="#E1E1E1" Offset="0"/>
+            <GradientStop Color="#EDEDED" Offset="0.20"/>
+            <GradientStop Color="#EDEDED" Offset="0.80"/>
+            <GradientStop Color="#E3E3E3" Offset="1"/>
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="ScrollBarDisabledBackground" Color="#F4F4F4"/>
+        <Style x:Key="ScrollBarButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <microsoftWindowsThemes:ScrollChrome x:Name="Chrome" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" SnapsToDevicePixels="true" microsoftWindowsThemes:ScrollChrome.ScrollGlyph="{TemplateBinding microsoftWindowsThemes:ScrollChrome.ScrollGlyph}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="VerticalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="border" CornerRadius="3" Background="#A5A5A5" BorderBrush="#666666" BorderThickness="1" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="#7F7F7F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <LinearGradientBrush x:Key="HorizontalScrollBarBackground" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#E1E1E1" Offset="0"/>
+            <GradientStop Color="#EDEDED" Offset="0.20"/>
+            <GradientStop Color="#EDEDED" Offset="0.80"/>
+            <GradientStop Color="#E3E3E3" Offset="1"/>
+        </LinearGradientBrush>
+        <Style x:Key="HorizontalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ScrollBarStyle1" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="{StaticResource VerticalScrollBarBackground}"/>
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
+            <Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="Bg" Background="Transparent" SnapsToDevicePixels="true">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                                <RowDefinition Height="0.00001*"/>
+                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
+                            </Grid.RowDefinitions>
+
+                            <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1" Style="{DynamicResource TrackStyle1}">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource VerticalScrollBarPageButton}"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource VerticalScrollBarPageButton}"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollBarThumb}" microsoftWindowsThemes:ScrollChrome.ScrollGlyph="VerticalGripper"/>
+                                </Track.Thumb>
+                            </Track>
+
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="Bg" Value="{StaticResource ScrollBarDisabledBackground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Width" Value="Auto"/>
+                    <Setter Property="MinWidth" Value="0"/>
+                    <Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}"/>
+                    <Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}"/>
+                    <Setter Property="Background" Value="{StaticResource HorizontalScrollBarBackground}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid x:Name="Bg" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
+                                        <ColumnDefinition Width="0.00001*"/>
+                                        <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}"/>
+                                    </Grid.ColumnDefinitions>
+                                    <RepeatButton Command="{x:Static ScrollBar.LineLeftCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Style="{StaticResource ScrollBarButton}" microsoftWindowsThemes:ScrollChrome.ScrollGlyph="LeftArrow"/>
+                                    <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource HorizontalScrollBarPageButton}"/>
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource HorizontalScrollBarPageButton}"/>
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource ScrollBarThumb}" microsoftWindowsThemes:ScrollChrome.ScrollGlyph="HorizontalGripper"/>
+                                        </Track.Thumb>
+                                    </Track>
+                                    <RepeatButton Grid.Column="2" Command="{x:Static ScrollBar.LineRightCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Style="{StaticResource ScrollBarButton}" microsoftWindowsThemes:ScrollChrome.ScrollGlyph="RightArrow"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Background" TargetName="Bg" Value="{StaticResource ScrollBarDisabledBackground}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="10" BorderThickness="1" Padding="1">
+        <Border.Background>
+            <ImageBrush ImageSource="背景资源/大背景.png"/>
+        </Border.Background>
+        <Grid x:Name="GridMain" Margin="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80*"/>
+                <RowDefinition Height="72*"/>
+                <RowDefinition Height="437*"/>
+                <RowDefinition Height="55*"/>
+                <RowDefinition Height="80*"/>
+                <RowDefinition Height="40*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="154*"/>
+                <ColumnDefinition Width="261*"/>
+                <ColumnDefinition Width="263*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox x:Name="ListUserlist" Margin="0,0,6,5" SelectionChanged="list_userlist_SelectionChanged" FontSize="25" HorizontalContentAlignment="Center" ItemTemplate="{DynamicResource ListBoxTemplate}" Background ="Transparent" 
+    			ItemsSource="{Binding}" Grid.Row="2" Grid.RowSpan="3" BorderThickness="0" PreviewMouseDown="list_userlist_PreviewMouseDown">
+                <ListBox.Resources>
+
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White"  Opacity=".4"/>
+                    <!--SelectedItem without focus-->
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White"  Opacity=".4"/>
+                </ListBox.Resources>
+            </ListBox>
+
+            <Button x:Name="ButPrint" Content="" Height="79" VerticalAlignment="Top" FontSize="20" Click="but_print_Click" Grid.Column="2" Grid.Row="4">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/打印.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+
+            <Button x:Name="ButRefresh" HorizontalAlignment="Left" Height="50"  VerticalAlignment="Top" Width="50" FontSize="20" Click="but_refresh_Click" Margin="240,17,0,0">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/刷新.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+
+            <Button x:Name="but_Previous" Content="" HorizontalAlignment="Right" Height="47" Margin="0,20,197,0" VerticalAlignment="Top" Width="100" FontSize="18" Click="but_Previous_Click" Grid.Row="1"  >
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/上一页0.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="but_Next" Content="" HorizontalAlignment="Left" Height="47" Margin="187,20,0,0" VerticalAlignment="Top" Width="100" FontSize="18" Click="but_Next_Click" Grid.Row="1" BorderBrush="{x:Null}" BorderThickness="0">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/下一页0.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Label x:Name="lab_page" Content="页数" HorizontalAlignment="Left" Height="37" Margin="102,25,0,0" VerticalAlignment="Top" Width="92" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14" Grid.Row="1" Foreground="White">
+                <Label.Background>
+                    <ImageBrush ImageSource="背景资源/页数0.png" Stretch="Uniform"/>
+                </Label.Background>
+            </Label>
+
+
+            <ScrollViewer  x:Name="bar" HorizontalScrollBarVisibility="Auto"  Template="{DynamicResource ScrollViewerControlTemplate1}" VerticalScrollBarVisibility="Auto"  Margin="4,0,0,0" Grid.Column="1" Grid.RowSpan="3" Grid.Row="1" >
+                <StackPanel x:Name="sp_messgbox" Orientation="Vertical"  ScrollViewer.VerticalScrollBarVisibility="Auto"  />
+            </ScrollViewer>
+
+            <Button x:Name="but_MessgPrevious" Content="" HorizontalAlignment="Left" Height="47" Margin="91,15,0,0" VerticalAlignment="Top" Width="122" FontSize="20" Click="but_MessgPrevious_Click" Grid.Column="1" Grid.Row="4">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/上一页.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="but_MessgNext" Content="" Height="47" Margin="321,15,0,0" VerticalAlignment="Top" FontSize="20" Click="but_MessgNext_Click" HorizontalAlignment="Left" Width="122" Grid.Column="1" Grid.Row="4">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/下一页.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Label x:Name="lab_messgpage" Content="消息页数" HorizontalAlignment="Left" Height="45" Margin="208,16,0,0" VerticalAlignment="Top" Width="118" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="14"  Grid.Column="1" Grid.Row="4" Foreground="White">
+                <Label.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="背景资源/页数.png"/>
+                </Label.Background>
+
+            </Label>
+            <Image x:Name="ImageShowImage" Margin="0,0,0,0" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" RenderTransformOrigin="0.5,0.5" PreviewMouseLeftButtonDown="ImageShowImage_PreviewMouseLeftButtonDown"/> 
+ 
+            <Button x:Name="but_Set" Content="" HorizontalAlignment="Left" Height="57" Margin="280,14,0,0" VerticalAlignment="Top" Width="66" FontSize="20" Click="but_Set_Click" Grid.Column="2">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="背景资源/设置.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="but_min" Content="" Margin="0,15,110,10" FontSize="40" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White" Click="but_min_Click" HorizontalAlignment="Right" Width="63" Grid.Column="2">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/最小化.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="but_closed" Content="" HorizontalAlignment="Right" Height="55" Margin="0,15,41,0" VerticalAlignment="Top" Width="63" RenderTransformOrigin="1.698,0.464" FontSize="30" Foreground="White" Click="but_closed_Click" Grid.Column="2">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="背景资源/关闭.png"/>
+                </Button.Background>
+            </Button>
+            <Label Content="User List" HorizontalAlignment="Left" Height="33" Margin="83,10,0,0" VerticalAlignment="Top" Width="103" Foreground="White" FontWeight="Bold" FontSize="20"/>
+            <Label Content="用户列表" HorizontalAlignment="Left" Height="33" Margin="83,47,0,0" VerticalAlignment="Top" Width="78" Foreground="White" FontWeight="Bold" FontSize="15"/>
+            <Label Content="News List" Grid.Column="1" HorizontalAlignment="Left" Height="33" Margin="26,10,0,0" VerticalAlignment="Top" Width="111" Foreground="White" FontWeight="Bold" FontSize="20"/>
+            <Label Content="消息列表" Grid.Column="1" HorizontalAlignment="Left" Height="33" Margin="27,47,0,0" VerticalAlignment="Top" Width="79" Foreground="White" FontWeight="Bold" FontSize="15"/>
+            <Label Content="Browse" Grid.Column="2" HorizontalAlignment="Left" Height="33" Margin="22,10,0,0" VerticalAlignment="Top" Width="88" Foreground="White" FontWeight="Bold" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+           
+            <Label Content="预览" Grid.Column="2" HorizontalAlignment="Left" Height="28" Margin="22,47,0,0" VerticalAlignment="Top" Width="81" Foreground="White" FontWeight="Bold" FontSize="15" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+
+            <Button x:Name="but_cut" Content="剪裁" RenderTransformOrigin="1.078,3.992" Click="Button_Click_1" Foreground="White" FontSize="20" Grid.Column="2" Margin="205,15,262,8" Background="#FFC9616D" FontStretch="Expanded" FontWeight="Bold" >
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border"  Background="{TemplateBinding Background}"
+            							Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="30" Opacity="1">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+            								Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>               
+            </Button>
+            <CheckBox Name="Vprint" Content="模拟打印" Grid.Column="2" HorizontalAlignment="Left" Height="28" Margin="106,8,0,0" Grid.Row="5" VerticalAlignment="Top" Width="131" RenderTransformOrigin="0.16,1" Foreground="White" FontSize="20" Checked="Vprint_Checked" />
+            <Button Content="" Grid.Column="2" HorizontalAlignment="Left" Height="41" Margin="108,9,0,0" Grid.Row="3" VerticalAlignment="Top" Width="72" Click="Button_Click_2">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush ImageSource="背景资源/左.png" Stretch="Uniform"/>
+                </Button.Background>
+            </Button>
+            <Button Content="" Grid.Column="2" HorizontalAlignment="Left" Height="41" Margin="371,9,0,0" Grid.Row="3" VerticalAlignment="Top" Width="72" Click="Button_Click_3">
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="背景资源/右.png"/>
+                </Button.Background>
+            </Button>
+            <Button Content="" Grid.Column="2" HorizontalAlignment="Left" Margin="236,9,0,5" Grid.Row="3" Width="72" Click="Button_Click_4" >
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}"
+    									Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="0">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+    										Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="背景资源/撤销.png"/>
+                </Button.Background>
+            </Button>
+            <local:CutImageControl x:Name="cut" Grid.Column="2" Grid.Row="1" Grid.RowSpan="2"  />
+            <CheckBox x:Name="Cut_Print" Content="打印裁切否" Grid.Column="2" HorizontalAlignment="Left" Height="28" Margin="323,8,0,0" Grid.Row="5" VerticalAlignment="Top" Width="131" RenderTransformOrigin="0.16,1" Foreground="White" FontSize="20"  />
+            <Button x:Name="but_loadphoto" Content="加载" RenderTransformOrigin="1.078,3.992" Foreground="White" FontSize="20" Grid.Column="2" Margin="131,15,336,8" Background="#FFC9616D" FontStretch="Expanded" FontWeight="Bold" Click="but_loadphoto_Click" >
+                <Button.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border"  Background="{TemplateBinding Background}"
+            							Focusable="False" BorderThickness="1"  BorderBrush="Transparent" CornerRadius="30" Opacity="1">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+            								Content="{TemplateBinding Content}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+        </Grid>
+    </Border>
+</Window>
